@@ -76,6 +76,7 @@ func updateMovie(w http.ResponseWriter, r *http.Request) {
 		if item.ID == params["id"] {
 			movies = append(movies[:index], movies[index+1:]...)
 			var movie Movie
+			movie.ID = item.ID
 			_ = json.NewDecoder(r.Body).Decode(&movie)
 			movies = append(movies, movie)
 			json.NewEncoder(w).Encode(movie)
@@ -94,7 +95,7 @@ func main() {
 	r.HandleFunc("/movies/{id}", getMovie).Methods("GET")
 	r.HandleFunc("/movies", createMovie).Methods("POST")
 	r.HandleFunc("/movies/{id}", updateMovie).Methods("PUT")
-	r.HandleFunc("movies/{id}", deleteMovie).Methods("DELETE")
+	r.HandleFunc("/movies/{id}", deleteMovie).Methods("DELETE")
 
 	fmt.Printf("Starting at port 8000\n")
 	log.Fatal(http.ListenAndServe(":8000", r))
